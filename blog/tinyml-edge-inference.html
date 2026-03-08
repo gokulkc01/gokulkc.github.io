@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyML in Practice — Gokul K.C.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="blog-style.css" />
+</head>
+
+<body>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">GKC — 2026</a>
+        <a href="../index.html#blog" class="back-link">&larr; Back to all posts</a>
+    </nav>
+
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="post-tag">Machine Learning</span>
+                <span class="post-date">February 18, 2026</span>
+                <span class="post-read-time">10 min read</span>
+            </div>
+            <h1 class="post-title">TinyML in Practice: <em>Running Neural Networks on Microcontrollers</em></h1>
+            <p class="post-subtitle">Quantization, model pruning, and the engineering reality of deploying ML on devices
+                with 512KB of RAM.</p>
+        </header>
+
+        <div class="post-body">
+            <h2>The Promise and the Constraint</h2>
+            <p>
+                Machine learning on microcontrollers sounds like an oxymoron. Modern ML models are measured in millions
+                of parameters and gigabytes of memory. An ESP32 has 512KB of SRAM. The gap between what ML frameworks
+                assume and what embedded hardware provides is enormous.
+            </p>
+            <p>
+                Yet TinyML is real, and it's powerful. Running inference at the edge means <strong>no network latency,
+                    no cloud costs, no privacy concerns from transmitting raw data, and no dependency on
+                    connectivity</strong>. For applications like agricultural monitoring, industrial anomaly detection,
+                or wearable health devices, these properties are not nice-to-haves — they're requirements.
+            </p>
+
+            <h2>The Model Compression Pipeline</h2>
+            <p>Getting a neural network to fit on a microcontroller is a multi-stage process:</p>
+
+            <h3>1. Architecture Selection</h3>
+            <p>
+                Start small. Don't train a ResNet-50 and try to shrink it. Choose architectures designed for efficiency:
+                MobileNets, EfficientNet-Lite, or custom shallow networks. For my agricultural classification task, a
+                3-layer convolutional network with depthwise separable convolutions gave 92% accuracy on the validation
+                set before any compression.
+            </p>
+
+            <h3>2. Pruning</h3>
+            <p>
+                Structured pruning removes entire neurons or filters that contribute least to the output. I pruned 40%
+                of filters based on L1-norm magnitude — the filters with the smallest weights were removed entirely.
+                This reduced model size by ~35% with only 0.8% accuracy drop.
+            </p>
+
+            <h3>3. Quantization</h3>
+            <p>
+                This is where the biggest gains happen. <strong>Post-training quantization</strong> converts 32-bit
+                floating-point weights to 8-bit integers. The model size drops by ~4x. On ARM Cortex-M processors (like
+                the one in ESP32), INT8 operations are also significantly faster than FP32.
+            </p>
+            <ul>
+                <li>Float32 model: 2.1MB → INT8 model: 180KB</li>
+                <li>Accuracy: 92.0% → 90.8% (acceptable tradeoff)</li>
+                <li>Inference time: reduced by ~3x on ESP32</li>
+            </ul>
+
+            <div class="post-callout">
+                <strong>Practical tip:</strong> Use representative calibration data during quantization. The quality of
+                your calibration dataset directly affects how well the quantized model preserves accuracy. I used 500
+                representative samples from each class — enough to capture the distribution without overfitting the
+                quantization parameters.
+            </div>
+
+            <h3>4. TensorFlow Lite Micro Conversion</h3>
+            <p>
+                The final step converts the quantized TensorFlow model to a TF Lite FlatBuffer and generates a C array
+                that can be compiled directly into the firmware. The TF Lite Micro runtime handles memory allocation
+                from a pre-allocated tensor arena — you specify the arena size at compile time, and all intermediate
+                activations are allocated within it.
+            </p>
+            <p>
+                Getting the arena size right is critical. Too small and inference fails. Too large and you don't have
+                memory for the rest of your application (communication stack, sensor drivers, etc.). I used the TF Lite
+                Micro memory profiling tools to find the minimum arena size: 48KB for my model.
+            </p>
+
+            <h2>Real-World Inference Pipeline</h2>
+            <p>The inference pipeline on the ESP32 runs as follows:</p>
+            <ul>
+                <li>Sensor readings accumulated in a circular buffer (30s window)</li>
+                <li>Feature extraction: compute rolling mean, variance, rate-of-change, min/max over the window</li>
+                <li>Normalize features using pre-computed training statistics (stored in flash)</li>
+                <li>Run TF Lite Micro inference (~45ms)</li>
+                <li>Apply confidence threshold (0.7) — below threshold, defer to cloud</li>
+                <li>High-confidence results trigger local actuation + LoRa transmission to gateway</li>
+            </ul>
+
+            <h2>What Surprised Me</h2>
+            <p>
+                <strong>Feature engineering mattered more than model architecture.</strong> I spent weeks trying
+                different neural network architectures, gaining maybe 1-2% accuracy. Then I spent a day crafting better
+                input features — adding time-domain statistics, frequency-domain features via a simple FFT, and
+                cross-sensor correlations — and accuracy jumped 8%.
+            </p>
+            <p>
+                On constrained devices, the cost of computing complex features is far less than the cost of running a
+                larger model. A few dozen floating-point operations for feature engineering vs thousands of
+                multiply-accumulate operations for extra network layers — the math is clear.
+            </p>
+
+            <div class="post-callout">
+                <strong>Takeaway:</strong> TinyML is not about making big models small. It's about making small models
+                smart. Invest in data quality, feature engineering, and problem framing before reaching for
+                architectural complexity. The constraint of limited hardware forces a discipline that often produces
+                better engineering.
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-nav">
+                <a href="url-shortener-design.html" class="post-nav-link">&larr; Prev: URL Shortener Design</a>
+                <a href="lessons-from-shipping.html" class="post-nav-link">Next: Lessons from Shipping &rarr;</a>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>

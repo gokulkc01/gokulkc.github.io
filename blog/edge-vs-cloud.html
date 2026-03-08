@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edge vs Cloud — Gokul K.C.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="blog-style.css" />
+</head>
+
+<body>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">GKC — 2026</a>
+        <a href="../index.html#blog" class="back-link">&larr; Back to all posts</a>
+    </nav>
+
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="post-tag">Edge Computing</span>
+                <span class="post-date">January 15, 2026</span>
+                <span class="post-read-time">12 min read</span>
+            </div>
+            <h1 class="post-title">Building a Real-Time Agricultural IoT System: <em>Edge vs Cloud</em></h1>
+            <p class="post-subtitle">How I reduced cloud bandwidth costs by 70% using TinyML on ESP32 — architecture
+                decisions, tradeoffs, and lessons from deploying at the edge.</p>
+        </header>
+
+        <div class="post-body">
+            <h2>The Problem</h2>
+            <p>
+                When I started building FarmAssist, I assumed the architecture would be straightforward: sensors collect
+                data, send it to the cloud, cloud processes everything, dashboard displays results. This is what most
+                IoT tutorials teach you.
+            </p>
+            <p>
+                Reality was different. The farms I was targeting had spotty connectivity at best — rural Karnataka,
+                where a stable 4G signal is a luxury. Pushing thousands of sensor readings per minute to a cloud server
+                wasn't just expensive, it was <strong>unreliable</strong>. Packets dropped. Latency spiked. The system
+                would go blind during the moments it mattered most.
+            </p>
+
+            <h2>The Architecture Decision</h2>
+            <p>
+                I moved to an <strong>edge-first architecture</strong>. Instead of treating the ESP32 as a dumb data
+                pipe, I turned it into a processing node. Using TensorFlow Lite Micro, I deployed quantized ML models
+                directly onto the microcontroller. The device could classify soil conditions, detect anomalies, and make
+                irrigation decisions locally — without any cloud round-trip.
+            </p>
+            <p>
+                The cloud became a sync layer, not a processing layer. Only aggregated insights and anomaly flags got
+                transmitted, typically a few hundred bytes every 5 minutes instead of continuous raw data streams.
+            </p>
+
+            <div class="post-callout">
+                <strong>Key insight:</strong> The best edge architecture isn't about avoiding the cloud entirely — it's
+                about being strategic about what crosses the network boundary.
+            </div>
+
+            <h2>TinyML on Constrained Hardware</h2>
+            <p>
+                The ESP32 has 512KB of SRAM and 4MB of flash. Running a neural network on this requires aggressive
+                optimization:
+            </p>
+            <ul>
+                <li><strong>Post-training quantization:</strong> Reduced model size from 2.1MB to 180KB (INT8
+                    quantization) with only 1.2% accuracy loss.</li>
+                <li><strong>Feature engineering over model complexity:</strong> Instead of feeding raw sensor data into
+                    a deep model, I pre-computed rolling averages, rate-of-change, and statistical features. A simpler
+                    model on better features outperformed a complex model on raw data.</li>
+                <li><strong>Inference batching:</strong> Accumulated 30 seconds of readings, ran inference once. This
+                    kept CPU utilization under 40% and left headroom for communication tasks.</li>
+            </ul>
+
+            <h2>LoRa for Long-Range, Low-Power Communication</h2>
+            <p>
+                Between ESP32 sensor nodes and the Raspberry Pi gateway, I used LoRa (Long Range) radio. LoRa can
+                transmit small payloads over several kilometers with minimal power draw — perfect for a distributed farm
+                network.
+            </p>
+            <p>
+                The tradeoff: bandwidth is extremely limited (~250 bytes per transmission at reasonable data rates).
+                This forced me to design compact binary protocols instead of JSON. Every byte mattered. I ended up with
+                a 24-byte packet format that encoded sensor type, value, confidence score, and a timestamp delta.
+            </p>
+
+            <h2>Results</h2>
+            <p>The edge-first approach yielded measurable improvements:</p>
+            <ul>
+                <li><strong>70% reduction</strong> in cloud bandwidth usage</li>
+                <li><strong>&lt;50ms inference latency</strong> on-device (vs 200-800ms cloud round-trip)</li>
+                <li><strong>90%+ classification accuracy</strong> on soil condition detection</li>
+                <li><strong>35% reduction</strong> in water wastage through automated, data-driven irrigation</li>
+                <li>System remained fully operational during 6+ hour connectivity outages</li>
+            </ul>
+
+            <h2>What I'd Do Differently</h2>
+            <p>
+                If I were starting over, I'd invest more time in <strong>over-the-air (OTA) model updates</strong>.
+                Deploying updated ML models required physical access to each ESP32 node. In a production farm scenario
+                with dozens of nodes spread over hectares, this doesn't scale.
+            </p>
+            <p>
+                I'd also explore <strong>federated learning</strong> — letting each node refine its model locally and
+                sharing only gradient updates with the central system. This would improve accuracy across heterogeneous
+                soil conditions without centralizing raw data.
+            </p>
+
+            <div class="post-callout">
+                <strong>Takeaway:</strong> Edge computing isn't a silver bullet, but for latency-sensitive,
+                bandwidth-constrained, reliability-critical applications, it changes the game. Think carefully about
+                where intelligence should live in your system.
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-nav">
+                <a href="../index.html#blog" class="post-nav-link">&larr; All Posts</a>
+                <a href="file-integrity-monitor.html" class="post-nav-link">Next: File Integrity Monitor &rarr;</a>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>

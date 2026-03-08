@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener Design — Gokul K.C.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="blog-style.css" />
+</head>
+
+<body>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">GKC — 2026</a>
+        <a href="../index.html#blog" class="back-link">&larr; Back to all posts</a>
+    </nav>
+
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="post-tag">System Design</span>
+                <span class="post-date">February 5, 2026</span>
+                <span class="post-read-time">8 min read</span>
+            </div>
+            <h1 class="post-title">Designing a URL Shortener <em>from Scratch</em></h1>
+            <p class="post-subtitle">A complete walkthrough — requirements, capacity estimation, database design,
+                caching strategy, and scaling considerations.</p>
+        </header>
+
+        <div class="post-body">
+            <h2>Why This Problem Matters</h2>
+            <p>
+                The URL shortener is the "hello world" of system design — deceptively simple on the surface, rich with
+                real engineering decisions underneath. It touches hashing, database design, caching, load balancing, and
+                analytics. Understanding it deeply gives you a framework for thinking about distributed systems.
+            </p>
+
+            <h2>Requirements & Constraints</h2>
+            <p>Let's define the system clearly before designing anything:</p>
+            <ul>
+                <li><strong>Functional:</strong> Shorten a URL, redirect from short URL to original, optional custom
+                    aliases, optional expiration</li>
+                <li><strong>Non-functional:</strong> Low latency redirects (&lt;100ms p99), high availability (99.9%),
+                    eventual consistency is acceptable, analytics on click counts</li>
+                <li><strong>Scale assumptions:</strong> 100M URLs created/month, 10:1 read-to-write ratio (1B
+                    redirects/month), 5-year data retention</li>
+            </ul>
+
+            <h2>Capacity Estimation</h2>
+            <p>
+                Working through the numbers: 100M URLs/month × 12 months × 5 years = 6B total URLs. Each record ~500
+                bytes (original URL + metadata) = ~3TB storage. At 1B redirects/month, that's ~380 reads/second average,
+                ~1900/second peak (5x). Write rate: ~38/second average.
+            </p>
+            <p>
+                This is a <strong>read-heavy system</strong>. The ratio tells us caching will be our primary
+                optimization lever.
+            </p>
+
+            <div class="post-callout">
+                <strong>Rule of thumb:</strong> Always start with the numbers. Capacity estimation isn't about precision
+                — it's about understanding whether you need one server or a hundred, a simple cache or a distributed
+                one.
+            </div>
+
+            <h2>Key Generation: Base62 Encoding</h2>
+            <p>
+                A 7-character Base62 key (a-z, A-Z, 0-9) gives us 62^7 = ~3.5 trillion unique combinations — more than
+                enough for our 6B requirement. I prefer pre-generating keys and storing them in a key database over
+                computing hashes at write time:
+            </p>
+            <ul>
+                <li>No collision handling needed (keys are unique by construction)</li>
+                <li>Constant-time key assignment vs hash computation + collision check</li>
+                <li>Key ranges can be partitioned across multiple application servers without coordination</li>
+            </ul>
+
+            <h2>Database Design</h2>
+            <p>
+                Two options: SQL (PostgreSQL) or NoSQL (DynamoDB/Cassandra). For this workload, I'd choose
+                <strong>NoSQL</strong>. The access pattern is simple — point lookups by short key. No complex joins. No
+                transactions across records. NoSQL databases excel at exactly this: high-throughput key-value lookups
+                with horizontal scalability.
+            </p>
+            <p>
+                Schema is minimal: short_key (partition key), original_url, created_at, expires_at, user_id (optional),
+                click_count.
+            </p>
+
+            <h2>Caching Strategy</h2>
+            <p>
+                With a 10:1 read-write ratio, caching is critical. A Redis cluster in front of the database with an LRU
+                eviction policy handles this well. The 80/20 rule applies — 20% of URLs likely account for 80% of
+                traffic. Caching even 10-20% of URLs could serve most reads from memory.
+            </p>
+            <ul>
+                <li><strong>Cache-aside pattern:</strong> Check cache → miss → read DB → populate cache → return.
+                    Simple, proven.</li>
+                <li><strong>TTL:</strong> Set cache TTL slightly shorter than URL expiration to avoid serving expired
+                    links.</li>
+                <li><strong>Cache size:</strong> 20% of daily active URLs × 500 bytes ≈ modest memory requirement,
+                    easily fits in a single Redis instance initially.</li>
+            </ul>
+
+            <h2>Scaling Considerations</h2>
+            <p>The system scales horizontally at every layer:</p>
+            <ul>
+                <li><strong>Application servers:</strong> Stateless — add more behind a load balancer</li>
+                <li><strong>Database:</strong> Partition by short_key hash. Each partition handles a subset of the
+                    keyspace independently.</li>
+                <li><strong>Cache:</strong> Consistent hashing across Redis nodes prevents cache stampede during node
+                    additions.</li>
+                <li><strong>Analytics:</strong> Click counting can be async — write to a Kafka topic, aggregate with a
+                    stream processor, update counts in batches.</li>
+            </ul>
+
+            <div class="post-callout">
+                <strong>Takeaway:</strong> System design is about understanding tradeoffs, not memorizing architectures.
+                Every decision — SQL vs NoSQL, cache-aside vs write-through, sync vs async analytics — is a tradeoff
+                between simplicity, performance, consistency, and cost. Be able to articulate <em>why</em> you chose
+                what you chose.
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-nav">
+                <a href="file-integrity-monitor.html" class="post-nav-link">&larr; Prev: File Integrity Monitor</a>
+                <a href="tinyml-edge-inference.html" class="post-nav-link">Next: TinyML in Practice &rarr;</a>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>

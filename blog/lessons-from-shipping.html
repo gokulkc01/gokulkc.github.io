@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lessons from Shipping — Gokul K.C.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="blog-style.css" />
+</head>
+
+<body>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">GKC — 2026</a>
+        <a href="../index.html#blog" class="back-link">&larr; Back to all posts</a>
+    </nav>
+
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="post-tag">Engineering</span>
+                <span class="post-date">March 2, 2026</span>
+                <span class="post-read-time">6 min read</span>
+            </div>
+            <h1 class="post-title">What I Learned Shipping <em>4 Projects</em> as a Student</h1>
+            <p class="post-subtitle">Scope creep, premature optimization, and why the best architecture is the one you
+                actually finish building.</p>
+        </header>
+
+        <div class="post-body">
+            <h2>Shipping Is a Skill</h2>
+            <p>
+                In college, you learn to write code. Nobody teaches you to <strong>ship code</strong>. These are
+                fundamentally different skills. Writing code is about solving a problem. Shipping code is about solving
+                a problem <em>well enough, fast enough, for a real user, with all the boring stuff included</em> — error
+                handling, edge cases, deployment, documentation.
+            </p>
+            <p>
+                Over the past two years, I built and shipped four production-quality projects: FarmAssist (IoT + Edge
+                ML), an Intelligent File Integrity Monitor, a Harmonica Tab Generator, and a Learning Operating System.
+                Each one taught me something that no textbook covered.
+            </p>
+
+            <h2>Lesson 1: Scope Creep Is the Default</h2>
+            <p>
+                Every project started with a clean specification and ended up three times larger. FarmAssist was
+                supposed to be a sensor dashboard. Then it needed ML classification. Then multilingual support. Then
+                market price integration. Then weather APIs.
+            </p>
+            <p>
+                The fix wasn't saying "no" to features — it was <strong>sequencing</strong>. I learned to define a
+                Minimum Viable Product ruthlessly, ship it, then iterate. Every feature after MVP gets evaluated
+                against: "Does a real user need this right now?"
+            </p>
+
+            <div class="post-callout">
+                <strong>Rule I follow now:</strong> If the feature doesn't serve the core use case, it goes in a "maybe
+                later" list. Most things on that list never get built — and that's fine.
+            </div>
+
+            <h2>Lesson 2: Premature Optimization Is Real</h2>
+            <p>
+                On the File Integrity Monitor, I spent a week building a custom event batching system to handle
+                "millions of filesystem events." In reality, the system monitored a few hundred files. The simple
+                approach — process each event individually — had zero performance issues.
+            </p>
+            <p>
+                I now follow a strict rule: <strong>measure before optimizing</strong>. If you can't show me a profiler
+                output or a metric that proves this is slow, we're not optimizing it.
+            </p>
+
+            <h2>Lesson 3: The Last 10% Takes 50% of the Time</h2>
+            <p>
+                Getting a project to "it works on my machine" takes 50% of the effort. Getting it to "it works reliably
+                for other people" takes the other 50%. This includes:
+            </p>
+            <ul>
+                <li>Error handling for inputs you didn't think of</li>
+                <li>Loading states, empty states, error states in the UI</li>
+                <li>Environment configuration and deployment scripts</li>
+                <li>Documentation that explains not just <em>how</em> but <em>why</em></li>
+                <li>Testing the unhappy paths, not just the happy ones</li>
+            </ul>
+            <p>
+                The Harmonica Tab Generator worked beautifully on clean studio recordings. It fell apart on phone
+                recordings with background noise. Adding audio preprocessing (noise reduction, normalization) was "the
+                last 10%" that took three weeks.
+            </p>
+
+            <h2>Lesson 4: Boring Technology Wins</h2>
+            <p>
+                For every project, I was tempted to use the newest, most interesting technology. GraphQL instead of
+                REST. Svelte instead of React. A novel database instead of MongoDB.
+            </p>
+            <p>
+                I learned to resist. <strong>Boring technology has better documentation, larger communities, and known
+                    failure modes.</strong> When something breaks at 2am, you want Stack Overflow answers, not GitHub
+                issues with "me too" comments.
+            </p>
+            <p>
+                Use proven tools for the foundation. Save the experimentation for the parts that are genuinely novel —
+                the edge ML inference, the behavioral anomaly detection, the AI-driven curriculum planning. Those are
+                where innovation creates value.
+            </p>
+
+            <h2>Lesson 5: Write About What You Build</h2>
+            <p>
+                The act of writing about a project forces you to understand it more deeply. When I wrote the blog post
+                about my edge-vs-cloud architecture decision, I realized there were tradeoffs I hadn't fully considered.
+                Writing surfaced gaps in my thinking that building alone didn't.
+            </p>
+            <p>
+                Writing also compounds. Every blog post is a permanent artifact that communicates your thinking to
+                people you'll never meet. It's the highest-leverage activity an engineer can do outside of building.
+            </p>
+
+            <div class="post-callout">
+                <strong>Takeaway:</strong> Ship early, ship often, and write about shipping. The projects you finish
+                teach you more than the perfect architectures you never build. Start ugly, iterate towards elegance, and
+                never confuse complexity with quality.
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-nav">
+                <a href="tinyml-edge-inference.html" class="post-nav-link">&larr; Prev: TinyML in Practice</a>
+                <a href="../index.html#blog" class="post-nav-link">All Posts &rarr;</a>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>

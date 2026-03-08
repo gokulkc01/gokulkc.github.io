@@ -1019,6 +1019,121 @@
       color: var(--accent);
     }
 
+    .blog-card-number {
+      font-family: var(--serif);
+      font-size: 2.8rem;
+      font-weight: 400;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 1rem;
+      transition: color .3s;
+    }
+
+    .blog-card:hover .blog-card-number {
+      color: var(--accent-dim);
+    }
+
+    .blog-reading-time {
+      font-family: var(--mono);
+      font-size: .58rem;
+      color: var(--text3);
+      letter-spacing: .08em;
+      margin-top: .6rem;
+    }
+
+    .blog-featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .35s, transform .4s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .blog-featured:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .blog-featured-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .blog-featured .blog-card-number {
+      font-size: 4rem;
+    }
+
+    .blog-featured .blog-title {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .blog-featured .blog-excerpt {
+      font-size: .85rem;
+      max-width: 520px;
+    }
+
+    .blog-featured-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2rem;
+      border-left: 1px solid var(--border);
+      padding-left: 2.5rem;
+    }
+
+    .blog-featured-stat {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+
+    .blog-featured-stat .stat-val {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      color: var(--accent);
+      letter-spacing: -.02em;
+    }
+
+    .blog-featured-stat .stat-lbl {
+      font-family: var(--mono);
+      font-size: .6rem;
+      color: var(--text3);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .blog-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 0;
+    }
+
+    .blog-view-all {
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--text3);
+      text-decoration: none;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: color .3s;
+      padding-bottom: .3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blog-view-all:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
     /* ─── MOBILE ─── */
     @media (max-width: 900px) {
       nav {
@@ -1067,6 +1182,20 @@
         grid-template-columns: 1fr;
       }
 
+      .blog-featured {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-featured-right {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        padding-top: 1.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
       .achievements-grid {
         grid-template-columns: 1fr;
       }
@@ -1099,6 +1228,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Education</a></li>
+      <li><a href="#blog">Blog</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-right">
@@ -1498,41 +1628,103 @@
   <!-- BLOG -->
   <section id="blog">
     <div class="section-label reveal">05 — Writing</div>
-    <h2 class="section-title reveal">Ideas & <em>Reflections</em></h2>
-    <p class="section-sub reveal">Documenting architecture decisions, tradeoffs, and lessons from building real systems.
-    </p>
+    <div class="blog-section-header">
+      <div>
+        <h2 class="section-title reveal">Ideas & <em>Reflections</em></h2>
+        <p class="section-sub reveal">Documenting architecture decisions, tradeoffs, and lessons from building real
+          systems — the way top engineers and scientists share their thinking.</p>
+      </div>
+    </div>
 
-    <div class="blog-grid">
-      <a href="#" class="blog-card reveal">
-        <div class="blog-meta">
-          <span class="blog-tag-label">Edge Computing</span>
-          <span class="blog-date-label">Jan 2026</span>
+    <div class="blog-grid" style="margin-top: 4rem;">
+
+      <!-- Featured Post -->
+      <a href="blog/edge-vs-cloud.html" class="blog-featured reveal">
+        <div class="blog-featured-left">
+          <div class="blog-meta">
+            <span class="blog-tag-label">Featured</span>
+            <span class="blog-date-label">Jan 2026</span>
+          </div>
+          <div class="blog-card-number">01</div>
+          <div class="blog-title">Building a Real-Time Agricultural IoT System: Edge vs Cloud</div>
+          <p class="blog-excerpt">How I reduced cloud bandwidth costs by 70% using TinyML on ESP32 — architecture
+            decisions, tradeoffs, and lessons from deploying at the edge. A deep look into constrained-device
+            engineering.</p>
+          <div class="blog-reading-time">12 min read</div>
+          <div class="blog-read-more">Read full article &rarr;</div>
         </div>
-        <div class="blog-title">Building a Real-Time Agricultural IoT System: Edge vs Cloud</div>
-        <p class="blog-excerpt">How I reduced cloud bandwidth costs by 70% using TinyML on ESP32 — architecture
-          decisions, tradeoffs, and lessons from deploying at the edge.</p>
-        <div class="blog-read-more">Read more &rarr;</div>
+        <div class="blog-featured-right">
+          <div class="blog-featured-stat">
+            <span class="stat-val">70%</span>
+            <span class="stat-lbl">Bandwidth Reduced</span>
+          </div>
+          <div class="blog-featured-stat">
+            <span class="stat-val">&lt;50ms</span>
+            <span class="stat-lbl">Inference Latency</span>
+          </div>
+          <div class="blog-featured-stat">
+            <span class="stat-val">ESP32</span>
+            <span class="stat-lbl">Target Hardware</span>
+          </div>
+        </div>
       </a>
-      <a href="#" class="blog-card reveal">
+
+      <!-- Card 2 -->
+      <a href="blog/file-integrity-monitor.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">Security</span>
           <span class="blog-date-label">Jan 2026</span>
         </div>
+        <div class="blog-card-number">02</div>
         <div class="blog-title">Detecting Ransomware Patterns: Inside My File Integrity Monitor</div>
-        <p class="blog-excerpt">A deep dive into combining cryptographic hashing with behavioral anomaly detection to
-          achieve 96.3% accuracy on simulated attack scenarios.</p>
+        <p class="blog-excerpt">Combining cryptographic hashing with behavioral anomaly detection to achieve 96.3%
+          accuracy on simulated attack scenarios.</p>
+        <div class="blog-reading-time">9 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
-      <a href="#" class="blog-card reveal">
+
+      <!-- Card 3 -->
+      <a href="blog/url-shortener-design.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">System Design</span>
           <span class="blog-date-label">Feb 2026</span>
         </div>
-        <div class="blog-title">System Design Primer: Designing a URL Shortener from Scratch</div>
+        <div class="blog-card-number">03</div>
+        <div class="blog-title">Designing a URL Shortener from Scratch</div>
         <p class="blog-excerpt">A complete walkthrough — requirements, capacity estimation, database design, caching
           strategy, and scaling considerations.</p>
+        <div class="blog-reading-time">8 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
+
+      <!-- Card 4 -->
+      <a href="blog/tinyml-edge-inference.html" class="blog-card reveal">
+        <div class="blog-meta">
+          <span class="blog-tag-label">Machine Learning</span>
+          <span class="blog-date-label">Feb 2026</span>
+        </div>
+        <div class="blog-card-number">04</div>
+        <div class="blog-title">TinyML in Practice: Running Neural Networks on Microcontrollers</div>
+        <p class="blog-excerpt">Quantization, model pruning, and the engineering reality of deploying ML on devices with
+          512KB of RAM.</p>
+        <div class="blog-reading-time">10 min read</div>
+        <div class="blog-read-more">Read more &rarr;</div>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="blog/lessons-from-shipping.html" class="blog-card reveal">
+        <div class="blog-meta">
+          <span class="blog-tag-label">Engineering</span>
+          <span class="blog-date-label">Mar 2026</span>
+        </div>
+        <div class="blog-card-number">05</div>
+        <div class="blog-title">What I Learned Shipping 4 Projects as a Student</div>
+        <p class="blog-excerpt">Scope creep, premature optimization, and why the best architecture is the one you
+          actually finish building.</p>
+        <div class="blog-reading-time">6 min read</div>
+        <div class="blog-read-more">Read more &rarr;</div>
+      </a>
+
     </div>
   </section>
 
@@ -1553,7 +1745,7 @@
         <p>Based in Bengaluru, Karnataka. Usually respond within 24 hours.</p>
         <div class="contact-cta">
           <a href="mailto:kcgokul001@gmail.com" class="btn btn-primary">Send Email</a>
-          <a href="#" class="btn btn-ghost">Download Resume</a>
+          <a href="assets/Gokul_K_C-resume.pdf" download class="btn btn-ghost">Download Resume</a>
         </div>
       </div>
 
@@ -1568,9 +1760,9 @@
           <span class="contact-item-value">github.com/gokulkc01</span>
           <span class="contact-item-arrow">&#8599;</span>
         </a>
-        <a href="#" class="contact-item">
+        <a href="https://linkedin.com/in/gokulkc001" target="_blank" class="contact-item">
           <span class="contact-item-label">LinkedIn</span>
-          <span class="contact-item-value">linkedin.com/in/gokulkc</span>
+          <span class="contact-item-value">linkedin.com/in/gokulkc001</span>
           <span class="contact-item-arrow">&#8599;</span>
         </a>
         <a href="tel:+918431924716" class="contact-item">
