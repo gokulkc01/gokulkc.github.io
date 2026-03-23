@@ -155,15 +155,8 @@
     }
 
     @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: .2;
-      }
+      0%, 100% { opacity: 1; }
+      50% { opacity: .2; }
     }
 
     /* ─── HERO ─── */
@@ -177,8 +170,6 @@
       margin: 0 auto;
       gap: 4rem;
     }
-
-    .hero-left {}
 
     .hero-tag {
       font-family: var(--mono);
@@ -436,8 +427,6 @@
       border-radius: 50%;
     }
 
-    .about-text-col {}
-
     .about-text-col p {
       font-size: .92rem;
       color: var(--text2);
@@ -563,8 +552,6 @@
       letter-spacing: .08em;
     }
 
-    .project-main {}
-
     .project-name {
       font-family: var(--serif);
       font-size: 1.3rem;
@@ -617,6 +604,12 @@
       border: 1px solid rgba(200, 240, 110, .25);
       color: var(--accent);
       background: var(--accent-dim);
+    }
+
+    .p-status.in-progress {
+      border-color: rgba(200, 180, 110, .25);
+      color: #f0d070;
+      background: rgba(200, 180, 110, 0.08);
     }
 
     .p-metrics {
@@ -705,8 +698,6 @@
       padding-top: .2rem;
     }
 
-    .tl-body {}
-
     .tl-title {
       font-size: .9rem;
       font-weight: 600;
@@ -775,8 +766,6 @@
       gap: 5rem;
       align-items: start;
     }
-
-    .contact-left {}
 
     .contact-left p {
       font-size: .92rem;
@@ -892,57 +881,24 @@
       transform: none;
     }
 
-    /* stagger delays */
-    .reveal:nth-child(2) {
-      transition-delay: .1s;
-    }
-
-    .reveal:nth-child(3) {
-      transition-delay: .2s;
-    }
-
-    .reveal:nth-child(4) {
-      transition-delay: .3s;
-    }
-
-    .reveal:nth-child(5) {
-      transition-delay: .4s;
-    }
+    .reveal:nth-child(2) { transition-delay: .1s; }
+    .reveal:nth-child(3) { transition-delay: .2s; }
+    .reveal:nth-child(4) { transition-delay: .3s; }
+    .reveal:nth-child(5) { transition-delay: .4s; }
 
     /* ─── HERO ENTRANCE ─── */
-    .hero-tag {
-      animation: fadeUp .8s cubic-bezier(.16, 1, .3, 1) .3s both;
-    }
-
-    .hero h1 {
-      animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .5s both;
-    }
-
-    .hero-desc {
-      animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .65s both;
-    }
-
-    .hero-actions {
-      animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .8s both;
-    }
-
-    .hero-right {
-      animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .5s both;
-    }
+    .hero-tag { animation: fadeUp .8s cubic-bezier(.16, 1, .3, 1) .3s both; }
+    .hero h1 { animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .5s both; }
+    .hero-desc { animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .65s both; }
+    .hero-actions { animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .8s both; }
+    .hero-right { animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) .5s both; }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-
-      to {
-        opacity: 1;
-        transform: none;
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: none; }
     }
 
-    /* ─── BLOG section ─── */
+    /* ─── BLOG ─── */
     .blog-grid {
       margin-top: 4rem;
       display: grid;
@@ -1066,19 +1022,9 @@
       justify-content: center;
     }
 
-    .blog-featured .blog-card-number {
-      font-size: 4rem;
-    }
-
-    .blog-featured .blog-title {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-    }
-
-    .blog-featured .blog-excerpt {
-      font-size: .85rem;
-      max-width: 520px;
-    }
+    .blog-featured .blog-card-number { font-size: 4rem; }
+    .blog-featured .blog-title { font-size: 1.4rem; margin-bottom: 1rem; }
+    .blog-featured .blog-excerpt { font-size: .85rem; max-width: 520px; }
 
     .blog-featured-right {
       display: flex;
@@ -1087,12 +1033,6 @@
       gap: 1.2rem;
       border-left: 1px solid var(--border);
       padding-left: 2.5rem;
-    }
-
-    .blog-featured-stat {
-      display: flex;
-      flex-direction: column;
-      gap: .2rem;
     }
 
     .blog-featured-stat .stat-val {
@@ -1114,39 +1054,13 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 0;
-    }
-
-    .blog-view-all {
-      font-family: var(--mono);
-      font-size: .68rem;
-      color: var(--text3);
-      text-decoration: none;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      transition: color .3s;
-      padding-bottom: .3rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .blog-view-all:hover {
-      color: var(--accent);
-      border-color: var(--accent);
     }
 
     /* ─── MOBILE ─── */
     @media (max-width: 900px) {
-      nav {
-        padding: 1rem 1.5rem;
-      }
-
-      nav.scrolled {
-        padding: .8rem 1.5rem;
-      }
-
-      .nav-links {
-        display: none;
-      }
+      nav { padding: 1rem 1.5rem; }
+      nav.scrolled { padding: .8rem 1.5rem; }
+      .nav-links { display: none; }
 
       .hero {
         grid-template-columns: 1fr;
@@ -1163,24 +1077,14 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      section {
-        padding: 4rem 1.5rem;
-      }
+      section { padding: 4rem 1.5rem; }
 
       .about-grid,
       .contact-layout,
-      .edu-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
+      .edu-grid { grid-template-columns: 1fr; gap: 3rem; }
 
-      .skills-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .blog-grid {
-        grid-template-columns: 1fr;
-      }
+      .skills-layout { grid-template-columns: 1fr; }
+      .blog-grid { grid-template-columns: 1fr; }
 
       .blog-featured {
         grid-template-columns: 1fr;
@@ -1196,24 +1100,16 @@
         gap: 1.5rem;
       }
 
-      .achievements-grid {
-        grid-template-columns: 1fr;
-      }
+      .achievements-grid { grid-template-columns: 1fr; }
 
       .project-row {
         grid-template-columns: 50px 1fr;
         gap: 1rem;
       }
 
-      .project-meta {
-        display: none;
-      }
+      .project-meta { display: none; }
 
-      footer {
-        flex-direction: column;
-        gap: .5rem;
-        text-align: center;
-      }
+      footer { flex-direction: column; gap: .5rem; text-align: center; }
     }
   </style>
 </head>
@@ -1239,11 +1135,10 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-left">
-      <div class="hero-tag">CSE · Cybersecurity · MSRIT '27</div>
+      <div class="hero-tag">CSE · Cybersecurity / AI & ML · MSRIT '27</div>
       <h1>Gokul<br><em>K.C.</em></h1>
       <p class="hero-desc">
-        Computer Science undergraduate specializing in Cybersecurity. I build at the intersection of edge computing, IoT
-        security, and intelligent systems — focused on performance, efficiency, and depth.
+        Computer Science undergraduate specializing in Cybersecurity. I build at the intersection of cloud systems, IoT security, and intelligent agents — focused on performance, correctness, and systems that actually work under real-world constraints.
       </p>
       <div class="hero-actions">
         <a href="#projects" class="btn btn-primary">View Projects</a>
@@ -1252,16 +1147,16 @@
     </div>
     <div class="hero-right">
       <div class="hero-stat">
-        <div class="num">8.77</div>
+        <div class="num">8.72</div>
         <div class="lbl">CGPA / 10</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">60%+</div>
+        <div class="lbl">MARL Capture Rate</div>
       </div>
       <div class="hero-stat">
         <div class="num">96.3%</div>
         <div class="lbl">Threat Detection Accuracy</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num">70%</div>
-        <div class="lbl">Cloud Bandwidth Reduced</div>
       </div>
       <div class="hero-stat">
         <div class="num">160+</div>
@@ -1275,7 +1170,7 @@
   <!-- ABOUT -->
   <section id="about">
     <div class="section-label reveal">01 — About</div>
-    <h2 class="section-title reveal">Building systems that<br><em>think at the edge</em></h2>
+    <h2 class="section-title reveal">Building systems that<br><em>work under constraint</em></h2>
 
     <div class="about-grid">
       <div class="about-photo-col reveal-left">
@@ -1292,23 +1187,22 @@
       <div class="about-text-col reveal">
         <p>
           I'm a 3rd-year undergraduate at <strong>Ramaiah Institute of Technology</strong>, pursuing Computer Science
-          with a specialization in Cybersecurity. My work spans embedded systems, real-time web platforms, and machine
-          learning at the edge.
+          with a specialization in Cybersecurity and a minor in AI & ML. My work spans cloud platforms, real-time
+          web systems, multi-agent reinforcement learning, and embedded edge computing.
         </p>
         <p>
-          I've built edge-cloud architectures that process thousands of sensor readings on constrained hardware,
-          security monitoring systems with near-real-time threat detection, and AI-assisted tools for learning and
-          productivity. I care deeply about <strong>correctness, efficiency, and systems that actually work in the real
-            world</strong>.
+          I've built a cloud IoT digital twin platform with containerized execution sandboxes and Redis pub/sub
+          real-time streaming, a trust-aware cooperative drone surveillance system that maintains >60% capture
+          success under 30% communication loss, and an edge-cloud agriculture stack that classifies soil conditions
+          on-device in under 50ms.
         </p>
         <p>
-          Beyond building, I write about what I learn — architecture decisions, tradeoffs, and lessons from shipping.
-          I'm actively working on open-source contributions and exploring intersections between hardware security and ML
-          inference.
+          I care deeply about <strong>correctness, efficiency, and systems that actually hold up in production</strong>.
+          Beyond building, I write about architecture decisions, tradeoffs, and the lessons that only show up when
+          something breaks.
         </p>
         <div class="about-highlight">
-          <p>"The best systems are invisible — they just work, quietly and reliably, even when conditions are
-            imperfect."</p>
+          <p>"The best systems are invisible — they just work, quietly and reliably, even when conditions are imperfect."</p>
         </div>
       </div>
     </div>
@@ -1327,13 +1221,13 @@
         <div class="skill-cell-label">Web & Backend</div>
         <div class="skill-list">
           <span class="s-tag">React.js</span>
+          <span class="s-tag">FastAPI</span>
           <span class="s-tag">Node.js</span>
           <span class="s-tag">Express</span>
-          <span class="s-tag">FastAPI</span>
-          <span class="s-tag">MongoDB</span>
-          <span class="s-tag">PostgreSQL</span>
-          <span class="s-tag">Socket.io</span>
+          <span class="s-tag">WebSockets</span>
           <span class="s-tag">REST APIs</span>
+          <span class="s-tag">PostgreSQL</span>
+          <span class="s-tag">MongoDB</span>
         </div>
       </div>
       <div class="skill-cell">
@@ -1357,43 +1251,44 @@
           <span class="s-tag">LoRa</span>
           <span class="s-tag">TinyML</span>
           <span class="s-tag">TF Lite</span>
-          <span class="s-tag">Sensor Integration</span>
           <span class="s-tag">MQTT</span>
+          <span class="s-tag">Docker SDK</span>
         </div>
       </div>
       <div class="skill-cell">
         <div class="skill-cell-label">ML / AI</div>
         <div class="skill-list">
-          <span class="s-tag">TensorFlow</span>
           <span class="s-tag">PyTorch</span>
+          <span class="s-tag">TensorFlow</span>
+          <span class="s-tag">MARL / MAPPO</span>
+          <span class="s-tag">PPO</span>
+          <span class="s-tag">PyBullet</span>
+          <span class="s-tag">WandB</span>
+          <span class="s-tag">ONNX</span>
           <span class="s-tag">Quantization</span>
-          <span class="s-tag">On-Device Inference</span>
-          <span class="s-tag">Librosa</span>
-          <span class="s-tag">Ollama</span>
-          <span class="s-tag">Feature Eng.</span>
         </div>
       </div>
       <div class="skill-cell">
         <div class="skill-cell-label">Systems & DevOps</div>
         <div class="skill-list">
           <span class="s-tag">Linux</span>
-          <span class="s-tag">Git</span>
           <span class="s-tag">Docker</span>
+          <span class="s-tag">Redis</span>
+          <span class="s-tag">Uvicorn</span>
+          <span class="s-tag">Git</span>
           <span class="s-tag">GCP</span>
-          <span class="s-tag">CI/CD</span>
           <span class="s-tag">TCP/UDP</span>
-          <span class="s-tag">WebSockets</span>
         </div>
       </div>
       <div class="skill-cell">
         <div class="skill-cell-label">Languages</div>
         <div class="skill-list">
-          <span class="s-tag">JavaScript</span>
           <span class="s-tag">Python</span>
+          <span class="s-tag">JavaScript</span>
+          <span class="s-tag">TypeScript</span>
           <span class="s-tag">Java</span>
           <span class="s-tag">C++</span>
           <span class="s-tag">C</span>
-          <span class="s-tag">TypeScript</span>
           <span class="s-tag">SQL</span>
         </div>
       </div>
@@ -1410,16 +1305,93 @@
 
     <div class="projects-list">
 
+      <!-- VirtuNode -->
       <div class="project-row reveal">
         <div class="project-idx">01 /</div>
+        <div class="project-main">
+          <div class="project-name">VirtuNode — Cloud-Based IoT Digital Twin Platform</div>
+          <p class="project-desc">
+            Cloud platform enabling developers to test IoT sensor logic without physical hardware by executing code inside
+            isolated Docker containers. Architected a Redis Pub/Sub message bus to stream real-time execution logs
+            from multi-worker Uvicorn backend to WebSocket clients with sub-second latency. Resolved async event-loop
+            contention in concurrent log streaming via a shared Redis state architecture. Features live digital twin
+            sensor state updates, configurable CPU/memory sandboxes, and execution history.
+          </p>
+          <div class="project-pills">
+            <span class="p-tag">FastAPI</span>
+            <span class="p-tag">React</span>
+            <span class="p-tag">Docker</span>
+            <span class="p-tag">Redis</span>
+            <span class="p-tag">WebSockets</span>
+            <span class="p-tag">Uvicorn</span>
+            <span class="p-tag">Python</span>
+            <span class="p-tag">Zustand</span>
+          </div>
+          <div class="project-links-row">
+            <a href="https://github.com/gokulkc01/virtunode-backend" target="_blank" class="p-link">GitHub (Backend)</a>
+            <a href="#blog" class="p-link">Write-up</a>
+          </div>
+        </div>
+        <div class="project-meta">
+          <span class="p-status in-progress">Active</span>
+          <div class="p-metrics">
+            <div class="p-metric"><strong>Sub-second</strong> log streaming</div>
+            <div class="p-metric"><strong>Redis pub/sub</strong> cross-worker</div>
+            <div class="p-metric"><strong>Isolated</strong> Docker sandboxes</div>
+            <div class="p-metric"><strong>4</strong> Uvicorn workers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SentryNet -->
+      <div class="project-row reveal">
+        <div class="project-idx">02 /</div>
+        <div class="project-main">
+          <div class="project-name">SentryNet — Multi-Agent RL Drone Surveillance System</div>
+          <p class="project-desc">
+            3-agent cooperative reinforcement learning system where autonomous drones track an intruder in a 20×20×10m
+            PyBullet-simulated airspace using a PettingZoo parallel MARL environment. Designed an EMA-based trust
+            scoring mechanism with adversarial communication modeling (Bernoulli packet drops + Gaussian spoofing)
+            to maintain reliable coordination under comms failure. Achieved >60% capture success rate under 30%
+            simulated communication loss — outperforming a baseline MARL system that drops below 40%. Full MAPPO
+            training pipeline with WandB experiment tracking and ONNX export.
+          </p>
+          <div class="project-pills">
+            <span class="p-tag">Python</span>
+            <span class="p-tag">PyTorch</span>
+            <span class="p-tag">PyBullet</span>
+            <span class="p-tag">PettingZoo</span>
+            <span class="p-tag">MAPPO</span>
+            <span class="p-tag">WandB</span>
+            <span class="p-tag">pytest</span>
+            <span class="p-tag">ONNX</span>
+          </div>
+          <div class="project-links-row">
+            <a href="https://github.com/gokulkc01" target="_blank" class="p-link">GitHub</a>
+          </div>
+        </div>
+        <div class="project-meta">
+          <span class="p-status">Completed</span>
+          <div class="p-metrics">
+            <div class="p-metric"><strong>>60%</strong> capture rate</div>
+            <div class="p-metric"><strong>30%</strong> comm loss tolerance</div>
+            <div class="p-metric"><strong>3</strong> cooperative agents</div>
+            <div class="p-metric"><strong>EMA</strong> trust scoring</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FarmAssist -->
+      <div class="project-row reveal">
+        <div class="project-idx">03 /</div>
         <div class="project-main">
           <div class="project-name">FarmAssist — Intelligent Remote Farm Management System</div>
           <p class="project-desc">
             Edge-cloud smart agriculture platform using ESP32 + TinyML + LoRa + Raspberry Pi for real-time farm
-            condition monitoring. Achieves over 90% on-device classification accuracy with sub-50ms inference latency in
-            low-connectivity environments. Integrates IoT sensor data, weather APIs, market price feeds, and
-            multilingual AI advisory (English, Hindi, Kannada, Tamil). Reduces water wastage by 35% through data-driven
-            irrigation strategies.
+            condition monitoring. Achieves over 90% on-device classification accuracy with sub-50ms inference latency
+            in low-connectivity environments. Integrates IoT sensor data, weather APIs, market price feeds, and
+            multilingual AI advisory (English, Hindi, Kannada, Tamil). Reduces water wastage by 35% through
+            data-driven automated irrigation strategies.
           </p>
           <div class="project-pills">
             <span class="p-tag">React</span>
@@ -1430,12 +1402,10 @@
             <span class="p-tag">LoRa</span>
             <span class="p-tag">TinyML</span>
             <span class="p-tag">TF Lite</span>
-            <span class="p-tag">JWT</span>
           </div>
           <div class="project-links-row">
-            <a href="#" class="p-link">GitHub</a>
-            <a href="#" class="p-link">Live Demo</a>
-            <a href="#" class="p-link">Write-up</a>
+            <a href="https://github.com/gokulkc01" target="_blank" class="p-link">GitHub</a>
+            <a href="blog/edge-vs-cloud.html" class="p-link">Write-up</a>
           </div>
         </div>
         <div class="project-meta">
@@ -1449,15 +1419,16 @@
         </div>
       </div>
 
+      <!-- File Integrity Monitor -->
       <div class="project-row reveal">
-        <div class="project-idx">02 /</div>
+        <div class="project-idx">04 /</div>
         <div class="project-main">
           <div class="project-name">Intelligent File Integrity Monitoring System</div>
           <p class="project-desc">
             Hybrid file integrity monitor combining SHA-256 cryptographic hashing with behavioral anomaly detection.
-            Detects ransomware-like patterns in real-time via filesystem event monitoring. Features automated
-            policy-driven rollback for incident response. Tested against 500+ simulated attack scenarios with a 96.3%
-            detection accuracy and under 500ms detection latency.
+            Detects ransomware-like patterns in real-time via filesystem event monitoring — rate-of-change analysis,
+            Shannon entropy spikes, extension patterns, and directory traversal detection. Features automated
+            policy-driven rollback. Tested across 500+ simulated attack scenarios.
           </p>
           <div class="project-pills">
             <span class="p-tag">Node.js</span>
@@ -1469,9 +1440,8 @@
             <span class="p-tag">SHA-256</span>
           </div>
           <div class="project-links-row">
-            <a href="#" class="p-link">GitHub</a>
-            <a href="#" class="p-link">Live Demo</a>
-            <a href="#" class="p-link">Write-up</a>
+            <a href="https://github.com/gokulkc01" target="_blank" class="p-link">GitHub</a>
+            <a href="blog/file-integrity-monitor.html" class="p-link">Write-up</a>
           </div>
         </div>
         <div class="project-meta">
@@ -1482,60 +1452,6 @@
             <div class="p-metric"><strong>500+</strong> attack scenarios</div>
             <div class="p-metric"><strong>80%</strong> faster response</div>
           </div>
-        </div>
-      </div>
-
-      <div class="project-row reveal">
-        <div class="project-idx">03 /</div>
-        <div class="project-main">
-          <div class="project-name">Harmonica Tab Generator — AI Audio-to-Notation Converter</div>
-          <p class="project-desc">
-            AI-driven audio transcription pipeline using PyTorch, Demucs for source separation, and TorchCrepe for pitch
-            detection. Converts uploaded MP3/WAV/M4A files into playable harmonica tablature with blow/draw notation.
-            Applies DSP techniques via Librosa and SciPy for accurate pitch mapping across multiple harmonica keys.
-          </p>
-          <div class="project-pills">
-            <span class="p-tag">Python</span>
-            <span class="p-tag">Flask</span>
-            <span class="p-tag">PyTorch</span>
-            <span class="p-tag">Librosa</span>
-            <span class="p-tag">Demucs</span>
-            <span class="p-tag">TorchCrepe</span>
-            <span class="p-tag">HTML/CSS/JS</span>
-          </div>
-          <div class="project-links-row">
-            <a href="#" class="p-link">GitHub</a>
-            <a href="#" class="p-link">Live Demo</a>
-          </div>
-        </div>
-        <div class="project-meta">
-          <span class="p-status">Live</span>
-        </div>
-      </div>
-
-      <div class="project-row reveal">
-        <div class="project-idx">04 /</div>
-        <div class="project-main">
-          <div class="project-name">Personal Learning & Productivity Operating System</div>
-          <p class="project-desc">
-            Closed-loop personal learning system using adaptive testing, knowledge-decay modeling, and
-            confidence-calibrated assessments. Includes a fake-learning detection model based on behavioral signals —
-            time-on-task, accuracy trends, confidence-performance gap, retention decay. Features an adaptive
-            goal-to-capability planning engine that dynamically recalculates learning roadmaps based on knowledge gaps.
-          </p>
-          <div class="project-pills">
-            <span class="p-tag">React</span>
-            <span class="p-tag">FastAPI</span>
-            <span class="p-tag">PostgreSQL</span>
-            <span class="p-tag">Ollama</span>
-            <span class="p-tag">LLM Evaluation</span>
-          </div>
-          <div class="project-links-row">
-            <a href="#" class="p-link">GitHub</a>
-          </div>
-        </div>
-        <div class="project-meta">
-          <span class="p-status">In Progress</span>
         </div>
       </div>
 
@@ -1556,9 +1472,9 @@
           <div class="tl-item">
             <div class="tl-date">2023–2027</div>
             <div class="tl-body">
-              <div class="tl-title">B.E. Computer Science (Cybersecurity)</div>
+              <div class="tl-title">B.E. Computer Science (Cybersecurity / AI & ML)</div>
               <div class="tl-place">Ramaiah Institute of Technology, Bengaluru</div>
-              <div class="tl-desc">CGPA: 8.77 / 10. Coursework in Computer Networks, Cryptography, Distributed Systems,
+              <div class="tl-desc">CGPA: 8.72 / 10. Coursework in Computer Networks, Cryptography, Distributed Systems,
                 DBMS, and Data Structures & Algorithms. Active in research and project-based learning.</div>
             </div>
           </div>
@@ -1582,12 +1498,12 @@
             <div class="tl-body">
               <div class="tl-title">Database Management Systems</div>
               <div class="tl-place">NPTEL — IIT/IISc Platform</div>
-              <div class="tl-desc">Relational databases, query optimization, transaction management, and database system
-                design.</div>
+              <div class="tl-desc">Relational databases, query optimization, transaction management, and database
+                system design.</div>
             </div>
           </div>
           <div class="tl-item">
-            <div class="tl-date">2026</div>
+            <div class="tl-date">2025</div>
             <div class="tl-body">
               <div class="tl-title">Artificial Intelligence A-Z</div>
               <div class="tl-place">Hadelin De Ponteves, Kirill Eremenko — Udemy</div>
@@ -1604,20 +1520,20 @@
       <div class="section-label reveal">Achievements</div>
       <div class="achievements-grid reveal">
         <div class="ach-cell">
-          <div class="ach-num">160+</div>
+          <div class="ach-num">200+</div>
           <div class="ach-label">DSA problems solved across LeetCode and GeeksforGeeks</div>
         </div>
         <div class="ach-cell">
-          <div class="ach-num">8.77</div>
-          <div class="ach-label">CGPA maintaining consistent academic performance in Cybersecurity specialization</div>
+          <div class="ach-num">8.72</div>
+          <div class="ach-label">CGPA maintaining consistent academic performance in Cybersecurity / AI & ML</div>
         </div>
         <div class="ach-cell">
-          <div class="ach-num">35%</div>
-          <div class="ach-label">Water wastage reduction through automated remote irrigation control system</div>
+          <div class="ach-num">60%+</div>
+          <div class="ach-label">MARL capture rate under 30% adversarial communication loss with trust-aware coordination</div>
         </div>
         <div class="ach-cell">
-          <div class="ach-num">4</div>
-          <div class="ach-label">Production projects shipped across IoT, security, AI, and web domains</div>
+          <div class="ach-num">5</div>
+          <div class="ach-label">Production projects shipped across cloud platforms, MARL, IoT, security, and web</div>
         </div>
       </div>
     </div>
@@ -1639,88 +1555,97 @@
     <div class="blog-grid" style="margin-top: 4rem;">
 
       <!-- Featured Post -->
-      <a href="blog/edge-vs-cloud.html" class="blog-featured reveal">
+      <a href="blog/virtunode-redis-architecture.html" class="blog-featured reveal">
         <div class="blog-featured-left">
           <div class="blog-meta">
             <span class="blog-tag-label">Featured</span>
-            <span class="blog-date-label">Jan 2026</span>
+            <span class="blog-date-label">Mar 2026</span>
           </div>
           <div class="blog-card-number">01</div>
-          <div class="blog-title">Building a Real-Time Agricultural IoT System: Edge vs Cloud</div>
-          <p class="blog-excerpt">How I reduced cloud bandwidth costs by 70% using TinyML on ESP32 — architecture
-            decisions, tradeoffs, and lessons from deploying at the edge. A deep look into constrained-device
-            engineering.</p>
-          <div class="blog-reading-time">12 min read</div>
+          <div class="blog-title">Real-Time IoT Digital Twins: How I Built VirtuNode's Redis Pub/Sub Architecture</div>
+          <p class="blog-excerpt">Building a multi-worker FastAPI backend that streams live sensor logs to WebSocket
+            clients — Redis pub/sub, async event-loop pitfalls, and how I resolved a cross-worker deadlock
+            that only appeared under concurrent load.</p>
+          <div class="blog-reading-time">11 min read</div>
           <div class="blog-read-more">Read full article &rarr;</div>
         </div>
         <div class="blog-featured-right">
           <div class="blog-featured-stat">
-            <span class="stat-val">70%</span>
-            <span class="stat-lbl">Bandwidth Reduced</span>
+            <span class="stat-val">Sub-1s</span>
+            <span class="stat-lbl">Streaming Latency</span>
           </div>
           <div class="blog-featured-stat">
-            <span class="stat-val">&lt;50ms</span>
-            <span class="stat-lbl">Inference Latency</span>
+            <span class="stat-val">4</span>
+            <span class="stat-lbl">Uvicorn Workers</span>
           </div>
           <div class="blog-featured-stat">
-            <span class="stat-val">ESP32</span>
-            <span class="stat-lbl">Target Hardware</span>
+            <span class="stat-val">Redis</span>
+            <span class="stat-lbl">Pub/Sub Backbone</span>
           </div>
         </div>
       </a>
 
       <!-- Card 2 -->
+      <a href="blog/edge-vs-cloud.html" class="blog-card reveal">
+        <div class="blog-meta">
+          <span class="blog-tag-label">Edge Computing</span>
+          <span class="blog-date-label">Jan 2026</span>
+        </div>
+        <div class="blog-card-number">02</div>
+        <div class="blog-title">Building a Real-Time Agricultural IoT System: Edge vs Cloud</div>
+        <p class="blog-excerpt">How I reduced cloud bandwidth costs by 70% using TinyML on ESP32 — architecture decisions, tradeoffs, and lessons from deploying at the edge.</p>
+        <div class="blog-reading-time">12 min read</div>
+        <div class="blog-read-more">Read more &rarr;</div>
+      </a>
+
+      <!-- Card 3 -->
       <a href="blog/file-integrity-monitor.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">Security</span>
           <span class="blog-date-label">Jan 2026</span>
         </div>
-        <div class="blog-card-number">02</div>
+        <div class="blog-card-number">03</div>
         <div class="blog-title">Detecting Ransomware Patterns: Inside My File Integrity Monitor</div>
-        <p class="blog-excerpt">Combining cryptographic hashing with behavioral anomaly detection to achieve 96.3%
-          accuracy on simulated attack scenarios.</p>
+        <p class="blog-excerpt">Combining cryptographic hashing with behavioral anomaly detection to achieve 96.3% accuracy on simulated attack scenarios.</p>
         <div class="blog-reading-time">9 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
 
-      <!-- Card 3 -->
+      <!-- Card 4 -->
       <a href="blog/url-shortener-design.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">System Design</span>
           <span class="blog-date-label">Feb 2026</span>
         </div>
-        <div class="blog-card-number">03</div>
+        <div class="blog-card-number">04</div>
         <div class="blog-title">Designing a URL Shortener from Scratch</div>
-        <p class="blog-excerpt">A complete walkthrough — requirements, capacity estimation, database design, caching
-          strategy, and scaling considerations.</p>
+        <p class="blog-excerpt">A complete walkthrough — requirements, capacity estimation, database design, caching strategy, and scaling considerations.</p>
         <div class="blog-reading-time">8 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
 
-      <!-- Card 4 -->
+      <!-- Card 5 -->
       <a href="blog/tinyml-edge-inference.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">Machine Learning</span>
           <span class="blog-date-label">Feb 2026</span>
         </div>
-        <div class="blog-card-number">04</div>
+        <div class="blog-card-number">05</div>
         <div class="blog-title">TinyML in Practice: Running Neural Networks on Microcontrollers</div>
-        <p class="blog-excerpt">Quantization, model pruning, and the engineering reality of deploying ML on devices with
-          512KB of RAM.</p>
+        <p class="blog-excerpt">Quantization, model pruning, and the engineering reality of deploying ML on devices with 512KB of RAM.</p>
         <div class="blog-reading-time">10 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
 
-      <!-- Card 5 -->
+      <!-- Card 6 -->
       <a href="blog/lessons-from-shipping.html" class="blog-card reveal">
         <div class="blog-meta">
           <span class="blog-tag-label">Engineering</span>
           <span class="blog-date-label">Mar 2026</span>
         </div>
-        <div class="blog-card-number">05</div>
+        <div class="blog-card-number">06</div>
         <div class="blog-title">What I Learned Shipping 4 Projects as a Student</div>
-        <p class="blog-excerpt">Scope creep, premature optimization, and why the best architecture is the one you
-          actually finish building.</p>
+        <p class="blog-excerpt">Scope creep, premature optimization, and why the best architecture is the one you actually finish building.</p>
         <div class="blog-reading-time">6 min read</div>
         <div class="blog-read-more">Read more &rarr;</div>
       </a>
@@ -1738,9 +1663,9 @@
     <div class="contact-layout">
       <div class="contact-left reveal">
         <p>
-          I'm open to internships, research collaborations, and projects at the intersection of security, embedded
-          systems, and machine learning. If you're working on something interesting — or just want to talk systems — I'd
-          like to hear from you.
+          I'm open to internships, research collaborations, and projects at the intersection of security,
+          distributed systems, and machine learning. If you're working on something interesting — or just
+          want to talk systems — I'd like to hear from you.
         </p>
         <p>Based in Bengaluru, Karnataka. Usually respond within 24 hours.</p>
         <div class="contact-cta">
@@ -1780,7 +1705,6 @@
   </footer>
 
   <script>
-    // Mark body as JS-ready so CSS animations activate
     document.body.classList.add('js-ready');
 
     // Nav scroll effect

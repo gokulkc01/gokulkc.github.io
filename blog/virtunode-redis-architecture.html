@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VirtuNode Redis Architecture — Gokul K.C.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="blog-style.css" />
+</head>
+
+<body>
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">GKC — 2026</a>
+        <a href="../index.html#blog" class="back-link">&larr; Back to all posts</a>
+    </nav>
+
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="post-tag">Systems</span>
+                <span class="post-date">March 2026</span>
+                <span class="post-read-time">11 min read</span>
+            </div>
+            <h1 class="post-title">Real-Time IoT Digital Twins: <em>VirtuNode's Redis Architecture</em></h1>
+            <p class="post-subtitle">How I built a multi-worker FastAPI backend that streams live sensor logs to WebSocket clients — and the async event-loop deadlock that only appeared under concurrent load.</p>
+        </header>
+
+        <div class="post-body">
+            <h2>The Problem Worth Solving</h2>
+            <p>
+                IoT development is painful. You write firmware, flash it to hardware, run a test, and wait to see if the
+                sensor logic behaves as expected. If something goes wrong, you're debugging hardware and software
+                simultaneously — a slow, expensive feedback loop. Physical devices are fragile, hard to parallelize,
+                and unavailable until the hardware ships.
+            </p>
+            <p>
+                VirtuNode's premise is simple: <strong>replace the physical device with a software twin</strong>. Upload
+                your sensor logic, run it inside an isolated Docker container, and watch the output stream live to your
+                browser. No hardware required. No reflashing. Instant feedback.
+            </p>
+            <p>
+                The engineering challenge is making that "watch the output stream live" part feel real. Sub-second
+                latency, reliable delivery across multiple concurrent users, and zero state leakage between isolated
+                sandboxes. That's what this post is about.
+            </p>
+
+            <h2>The Architecture</h2>
+            <p>
+                The core pipeline has three stages: execution, transport, and delivery.
+            </p>
+            <ul>
+                <li><strong>Execution:</strong> User code runs inside an isolated Docker container via the Docker SDK.
+                    CPU and memory limits are configurable per sandbox. The container writes sensor state to stdout.</li>
+                <li><strong>Transport:</strong> The backend worker that spawned the container captures stdout in a
+                    non-blocking executor, publishes each log line to a Redis channel keyed by session ID.</li>
+                <li><strong>Delivery:</strong> A WebSocket manager subscribes to the relevant Redis channel and pushes
+                    each message to the connected browser client in real-time.</li>
+            </ul>
+
+            <div class="post-callout">
+                <strong>Why Redis pub/sub?</strong> The backend runs with 4 Uvicorn workers for throughput. Any worker
+                can spawn a container; any worker can serve the WebSocket for that session. Redis pub/sub provides the
+                shared message bus that decouples these two — the publisher and subscriber don't need to be the same
+                process.
+            </div>
+
+            <h2>The Deadlock I Didn't See Coming</h2>
+            <p>
+                The first version worked perfectly in single-worker tests. The container spawned, logs streamed, the
+                WebSocket client received updates. Then I switched to 4 workers and things got strange.
+            </p>
+            <p>
+                Under concurrent load, some sessions would silently hang. The container was running — I could see it in
+                <code>docker ps</code>. The WebSocket connection stayed open. But no logs arrived. The session appeared
+                frozen.
+            </p>
+            <p>
+                The root cause was async event-loop contention. The original implementation used
+                <code>asyncio.create_subprocess_exec</code> to run the container, then awaited stdout in the same
+                coroutine as the Redis publisher. When multiple concurrent sessions competed for the event loop,
+                the stdout reader and the Redis publisher would deadlock waiting for each other — each blocking on
+                I/O that the other needed the event loop to process.
+            </p>
+            <p>
+                The fix was to move the blocking container interaction into a <strong>thread pool executor</strong> via
+                <code>loop.run_in_executor()</code>. The executor runs the container stdout reader in a separate thread,
+                completely off the async event loop. The results are passed back via a queue that the async Redis
+                publisher consumes. This decouples the I/O paths and eliminates the contention.
+            </p>
+
+            <div class="post-callout">
+                <strong>Key insight:</strong> In a multi-worker async system, any blocking I/O operation — even one that
+                appears fast in isolation — can become a deadlock source under load if it competes with other async
+                operations for event loop time. Run blocking I/O in executors, not in coroutines.
+            </div>
+
+            <h2>The WebSocket Manager</h2>
+            <p>
+                The WebSocket manager maintains a registry of active connections keyed by session ID. When a client
+                connects, it's registered with its session's channel. When a message arrives on that channel via Redis
+                pub/sub, the manager routes it to the correct WebSocket connection.
+            </p>
+            <p>
+                The tricky part is handling disconnections gracefully. If a client disconnects while a container is
+                still running, the session needs to be cleaned up — the container killed, the Redis subscription
+                closed, and the session state marked complete. I implemented a <code>container_ready</code>
+                synchronization flag that coordinates the lifecycle between the executor (which manages the container)
+                and the WebSocket manager (which manages the client connection).
+            </p>
+
+            <h2>Live Digital Twin Sensor State</h2>
+            <p>
+                Beyond raw log streaming, VirtuNode maintains a live digital twin — a structured representation of the
+                sensor's current state that updates in real-time as the container runs. Each log line is parsed for
+                structured sensor readings (temperature, humidity, pressure, custom fields) and stored in Redis with
+                a TTL. The WebSocket delivers both raw logs and structured state updates simultaneously, so the
+                frontend can render both a console output and a live dashboard visualization.
+            </p>
+
+            <h2>Sandbox Isolation</h2>
+            <p>
+                Each container runs with:
+            </p>
+            <ul>
+                <li><strong>Network isolation:</strong> No outbound network access — sensor logic shouldn't be calling
+                    home.</li>
+                <li><strong>CPU limits:</strong> Configurable, defaulting to 0.5 CPU cores. Prevents one noisy
+                    container from starving others.</li>
+                <li><strong>Memory limits:</strong> Hard ceiling enforced by the Docker runtime. The container is killed
+                    if it exceeds its allocation.</li>
+                <li><strong>Execution timeout:</strong> A watchdog coroutine kills any container that runs longer than
+                    the configured timeout.</li>
+                <li><strong>No persistent storage:</strong> Containers run from a read-only base image with no
+                    volume mounts. Code runs, logs stream, and the filesystem is discarded on exit.</li>
+            </ul>
+
+            <h2>What's Next</h2>
+            <p>
+                The backend is complete. The frontend (React + Vite + Tailwind + Framer Motion + Zustand) is in active
+                development. The next phase adds a code editor (Monaco), a sensor state visualization dashboard,
+                and scenario configuration — letting you define which sensors a twin exposes and what ranges they
+                should simulate.
+            </p>
+            <p>
+                Longer term, I want to add a scenario library — pre-built IoT environments (temperature logger,
+                motion detector, air quality monitor) that developers can fork and customize rather than starting
+                from scratch.
+            </p>
+
+            <div class="post-callout">
+                <strong>Takeaway:</strong> Real-time streaming systems are deceptively simple until you add concurrency.
+                The architecture that works for one user rarely survives ten concurrent users without explicit
+                thought about shared state, I/O decoupling, and lifecycle management. Redis pub/sub isn't magic —
+                it's just a clean way to make your message bus visible and testable.
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            <div class="post-nav">
+                <a href="../index.html#blog" class="post-nav-link">&larr; All Posts</a>
+                <a href="edge-vs-cloud.html" class="post-nav-link">Next: Edge vs Cloud &rarr;</a>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+    </script>
+</body>
+
+</html>
